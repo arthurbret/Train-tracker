@@ -1,5 +1,6 @@
 const input = document.querySelector('#input-gare');
 const bouton = document.querySelector('#recherche');
+const container = document.querySelector('#train-container');
 const urlApiSncf = "https://api.sncf.com";
 const urlDataSncf = "https://data.sncf.com";
 const headers = {
@@ -40,7 +41,7 @@ async function getInfoApi(url, uicCode) {
     }
 }
 
-bouton.addEventListener('click', async() => {
+async function affichageGare(){
     gareDemande = document.getElementById('input-gare').value
     console.log(gareDemande)
     try {
@@ -48,7 +49,32 @@ bouton.addEventListener('click', async() => {
         console.log(UIC)
         const dataApi = await getInfoApi(urlApiSncf, UIC)
         console.log(dataApi)
+        container.innerHTML = ""
+        dataApi.arrivals.forEach(element => {
+            console.log(element.display_informations.headsign)
+            container.innerHTML += 
+            `<div class="p-2 md:w-full cursor-pointer">
+                <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
+                    <img class="lg:h-48 md:h-36 w-full object-cover object-center" src="https://cdn-s-www.leprogres.fr/images/3C7DB6B7-ADA5-44AE-8643-DF835FB5008D/NW_raw/la-prochaine-reunion-publique-aura-lieu-a-montrottier-ce-jeudi-25-mai-photo-d-illustration-progres-redouja-merabti-1684962342.jpg" alt="burger image"></img>
+                    <div class="p-6">
+                        <h1 class="title-font text-lg font-medium text-gray-900 mb-3">${element.display_informations.headsign}</h1>
+                        <p class="leading-relaxed mb-3">${element.display_informations.direction}</p>
+                        <div class="flex items-center flex-wrap"></div>
+                    </div>
+                </div>
+            </div>`
+        });
     } catch (error) {
         console.error(error)
     }
+}
+
+bouton.addEventListener('click', async() => {
+    affichageGare()
 })
+
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'Enter') {
+        affichageGare()
+    }
+});
