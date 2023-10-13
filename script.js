@@ -8,6 +8,20 @@ const headers = {
 }
 let gareDemande;
 
+// Fonction qui transforme la date SNCF en heure
+function getHour(dateHeure) {
+    // Extrait l'année, le mois, le jour, l'heure, les minutes et les secondes de la chaîne d'entrée
+    const annee = dateHeure.slice(0, 4);
+    const mois = dateHeure.slice(4, 6);
+    const jour = dateHeure.slice(6, 8);
+    const heure = dateHeure.slice(9, 11);
+    const minutes = dateHeure.slice(11, 13);
+    const secondes = dateHeure.slice(13, 15);
+  
+    // Retourne l'heure formatée
+    return `${heure}:${minutes}:${secondes}`;
+} 
+
 const getDataSncf = async (url) => {
     const data = await fetch(url)
     const json = data.json()
@@ -52,14 +66,19 @@ async function affichageGare(){
         container.innerHTML = ""
         dataApi.arrivals.forEach(element => {
             console.log(element.display_informations.headsign)
+            let retard = "black"
+            if (element.stop_date_time.data_freshness == "base_schedule") {
+                retard = "green-500"
+            } else if (element.stop_date_time.data_freshness == "realtime") {
+                retard = "orange-500"
+            }
             container.innerHTML += 
             `<div class="p-2 md:w-full cursor-pointer">
                 <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
-                    <img class="lg:h-48 md:h-36 w-full object-cover object-center" src="https://cdn-s-www.leprogres.fr/images/3C7DB6B7-ADA5-44AE-8643-DF835FB5008D/NW_raw/la-prochaine-reunion-publique-aura-lieu-a-montrottier-ce-jeudi-25-mai-photo-d-illustration-progres-redouja-merabti-1684962342.jpg" alt="burger image"></img>
-                    <div class="p-6">
-                        <h1 class="title-font text-lg font-medium text-gray-900 mb-3">${element.display_informations.headsign}</h1>
-                        <p class="leading-relaxed mb-3">${element.display_informations.direction}</p>
-                        <div class="flex items-center flex-wrap"></div>
+                    <div class="flex flex-row flex-center items-center gap-3 ml-2">
+                        <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
+                        <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.arrival_date_time)}</h1>
+                        <p class="leading-relaxed">${element.display_informations.direction}</p>
                     </div>
                 </div>
             </div>`
