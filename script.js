@@ -1,6 +1,7 @@
 const input = document.querySelector('#input-gare');
 const bouton = document.querySelector('#recherche');
 const container = document.querySelector('#train-container');
+const suggestions = document.querySelector('#suggestions');
 const urlApiSncf = "https://api.sncf.com";
 const urlDataSncf = "https://data.sncf.com";
 const headers = {
@@ -22,13 +23,15 @@ function getHour(dateHeure) {
     return `${heure}:${minutes}:${secondes}`;
 } 
 
-const getDataSncf = async (url) => {
+// Fonction qui fetch le json d'un url sans header
+const getWithoutHeader = async (url) => {
     const data = await fetch(url)
     const json = data.json()
     return json
 }
 
-const getApiSncf = async (url) => {
+// Fonction qui fetch le json d'un url avec header (token auth api sncf)
+const getWithHeader = async (url) => {
     const data = await fetch(url, {
         headers: headers
     })
@@ -36,27 +39,40 @@ const getApiSncf = async (url) => {
     return json
 }
 
+// Fonction qui renvoie le code UIC d'une gare
 async function getUicCodeSncf(url, gare) {
     try {
-        const data = await getDataSncf(url + "/api/explore/v2.1/catalog/datasets/referentiel-gares-voyageurs/records?limit=20&refine=gare_alias_libelle_fronton%3A" + gare)
+        const data = await getWithoutHeader(url + "/api/explore/v2.1/catalog/datasets/referentiel-gares-voyageurs/records?limit=20&refine=gare_alias_libelle_fronton%3A" + gare)
         return data.results[0].uic_code
     } catch (error) {
         console.error(error)
     }
 }
 
+// Fonction qui renvoie les infos d'une gare en fonction de son code UIC
 async function getInfoApi(url, uicCode) {
     try {
         console.log(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/arrivals?")
-        const data = await getApiSncf(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/arrivals?")
+        const data = await getWithHeader(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/arrivals?")
         return data
     } catch (error) {
         console.error(error)
     }
 }
 
+async function getSuggestions(url, query) {
+    try {
+        console.log(url + "/v1/coverage/sncf/pt_objects?q=" + query + "&type%5B%5D=stop_point&")
+        const data = await getWithHeader(url + "/v1/coverage/sncf/pt_objects?q=" + query + "&type%5B%5D=stop_point&")
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// Fonction qui affiche les trains en fonction de la gare demandée
 async function affichageGare(){
-    gareDemande = document.getElementById('input-gare').value
+    gareDemande = input.value
     console.log(gareDemande)
     try {
         const UIC = (await getUicCodeSncf(urlDataSncf, gareDemande)).slice(2)
@@ -88,6 +104,21 @@ async function affichageGare(){
     }
 }
 
+async function affichageSuggestions(){
+    try{
+        const data = await getSuggestions(urlApiSncf, input.value)
+        console.log(data)
+        data.pt_objects.forEach(suggestion => {
+            suggestions.innerHTML +=
+            `<div class="absolute top-full p-2 bg-white border border-gray-300 rounded-lg w-full">
+                <p>${suggestion.name}</p>
+            </div>`
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 bouton.addEventListener('click', async() => {
     affichageGare()
 })
@@ -97,3 +128,26 @@ document.addEventListener('keydown', function(event) {
         affichageGare()
     }
 });
+
+input.addEventListener('input', (e) => {
+    const inputText = e.target.value.trim();
+
+    if (inputText.length >= 3) {
+    // Vous pouvez envoyer une requête API à ce stade pour obtenir des suggestions de gare.
+    // Assurez-vous de gérer la réponse de l'API et d'afficher les suggestions dans l'élément "suggestions".
+    affichageSuggestions()
+    suggestions.classList.remove('hidden');
+    console.log(inputText);
+    } else {
+    suggestions.innerHTML = ''; // Efface les suggestions si l'entrée est trop courte.
+    suggestions.classList.add('hidden');
+    }
+});
+
+document.addEventListener('click', (e) => {
+    // Vérifiez si l'élément cliqué n'est ni l'input ni les suggestions
+    if (!input.contains(e.target) && !suggestions.contains(e.target)) {
+      suggestions.innerHTML = ''; // Efface les suggestions
+      suggestions.classList.add('hidden');
+    }
+  });

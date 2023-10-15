@@ -13,10 +13,14 @@
 <body class="bg-gray-200">
     <div class="flex flex-wrap center justify-center flex-center items-center gap-2 mx-auto mt-6 max-w-[80%] p-2">
         <img src="logo.png" alt="logo" class="w-28 md:w-20">
-
         <p class="text-black text-[150%]">Gare que vous souhaitez tracker :</p>
-            <input id="input-gare" type="text" size="10" class="flex-initial w-2/3 flex flex-wrap justify-center bg-white rounded-lg border border-current gap-1 p-2"></input>
-            <span id="recherche" class="material-symbols-rounded cursor-pointer">search</span>
+        <div class="relative w-2/3">
+            <input id="input-gare" type="text" placeholder="Nom de la gare" size="10" class="w-full bg-white rounded-lg border border-current p-2" />
+            <div id="suggestions" class="">
+                
+            </div>
+        </div>
+        <span id="recherche" class="material-symbols-rounded cursor-pointer">search</span>
     </div>
     <div id="train-container" class="flex flex-col">
         
