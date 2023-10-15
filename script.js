@@ -136,6 +136,7 @@ input.addEventListener('input', (e) => {
     // Vous pouvez envoyer une requête API à ce stade pour obtenir des suggestions de gare.
     // Assurez-vous de gérer la réponse de l'API et d'afficher les suggestions dans l'élément "suggestions".
     affichageSuggestions()
+    suggestions.innerHTML = '';
     suggestions.classList.remove('hidden');
     console.log(inputText);
     } else {
