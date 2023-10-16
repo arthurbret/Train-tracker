@@ -110,7 +110,7 @@ async function affichageSuggestions(){
         console.log(data)
         data.pt_objects.forEach(suggestion => {
             suggestions.innerHTML +=
-            `<div class="absolute top-full p-2 bg-white border border-gray-300 rounded-lg w-full">
+            `<div class=" top-full p-2 bg-white border border-gray-300 rounded-lg w-full">
                 <p>${suggestion.name}</p>
             </div>`
         })
