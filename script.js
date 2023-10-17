@@ -8,6 +8,7 @@ const headers = {
     "Authorization" : "6d992b49-f48d-4c16-a560-6994483ae0b2"
 }
 let gareDemande;
+let tableauSuggestions = [];
 
 // Fonction qui transforme la date SNCF en heure
 function getHour(dateHeure) {
@@ -52,8 +53,8 @@ async function getUicCodeSncf(url, gare) {
 // Fonction qui renvoie les infos d'une gare en fonction de son code UIC
 async function getInfoApi(url, uicCode) {
     try {
-        console.log(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/arrivals?")
-        const data = await getWithHeader(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/arrivals?")
+        console.log(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/departures?")
+        const data = await getWithHeader(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/departures?")
         return data
     } catch (error) {
         console.error(error)
@@ -63,7 +64,7 @@ async function getInfoApi(url, uicCode) {
 async function getSuggestions(url, query) {
     try {
         console.log(url + "/v1/coverage/sncf/pt_objects?q=" + query + "&type%5B%5D=stop_point&")
-        const data = await getWithHeader(url + "/v1/coverage/sncf/pt_objects?q=" + query + "&type%5B%5D=stop_point&")
+        const data = await getWithHeader(url + "/v1/coverage/sncf/pt_objects?q=" + query + "&type%5B%5D=stop_area&")
         return data
     } catch (error) {
         console.error(error)
@@ -80,7 +81,7 @@ async function affichageGare(){
         const dataApi = await getInfoApi(urlApiSncf, UIC)
         console.log(dataApi)
         container.innerHTML = ""
-        dataApi.arrivals.forEach(element => {
+        dataApi.departures.forEach(element => {
             console.log(element.display_informations.headsign)
             let retard = "black"
             if (element.stop_date_time.data_freshness == "base_schedule") {
@@ -107,12 +108,23 @@ async function affichageGare(){
 async function affichageSuggestions(){
     try{
         const data = await getSuggestions(urlApiSncf, input.value)
-        console.log(data)
+        tableauSuggestions = data
         data.pt_objects.forEach(suggestion => {
             suggestions.innerHTML +=
-            `<div class=" top-full p-2 bg-white border border-gray-300 rounded-lg w-full">
+            `<div id="propal" class="top-full p-2 bg-white border border-gray-300 rounded-lg w-full hover:bg-gray-100 hover:cursor-pointer">
                 <p>${suggestion.name}</p>
             </div>`
+        })
+        const propal = document.querySelectorAll('#propal');
+        propal.forEach((propal,index) => {
+            propal.addEventListener('click', () => {
+                console.log("click",index)
+                input.value = tableauSuggestions.pt_objects[index].stop_area.name
+                suggestions.innerHTML = '';
+                suggestions.classList.remove('hidden');
+                affichageGare()
+                console.log("hello")
+            })
         })
     } catch (error) {
         console.error(error)
@@ -126,6 +138,8 @@ bouton.addEventListener('click', async() => {
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Enter') {
         affichageGare()
+        suggestions.innerHTML = '';
+        suggestions.classList.remove('hidden');
     }
 });
 
@@ -133,22 +147,22 @@ input.addEventListener('input', (e) => {
     const inputText = e.target.value.trim();
 
     if (inputText.length >= 3) {
-    // Vous pouvez envoyer une requête API à ce stade pour obtenir des suggestions de gare.
-    // Assurez-vous de gérer la réponse de l'API et d'afficher les suggestions dans l'élément "suggestions".
-    affichageSuggestions()
-    suggestions.innerHTML = '';
-    suggestions.classList.remove('hidden');
-    console.log(inputText);
+        // Vous pouvez envoyer une requête API à ce stade pour obtenir des suggestions de gare.
+        // Assurez-vous de gérer la réponse de l'API et d'afficher les suggestions dans l'élément "suggestions".
+        affichageSuggestions()
+        suggestions.innerHTML = '';
+        suggestions.classList.remove('hidden');
+        console.log(inputText);
     } else {
-    suggestions.innerHTML = ''; // Efface les suggestions si l'entrée est trop courte.
-    suggestions.classList.add('hidden');
+        suggestions.innerHTML = ''; // Efface les suggestions si l'entrée est trop courte.
+        suggestions.classList.add('hidden');
     }
 });
 
 document.addEventListener('click', (e) => {
     // Vérifiez si l'élément cliqué n'est ni l'input ni les suggestions
     if (!input.contains(e.target) && !suggestions.contains(e.target)) {
-      suggestions.innerHTML = ''; // Efface les suggestions
-      suggestions.classList.add('hidden');
+        suggestions.innerHTML = ''; // Efface les suggestions
+        suggestions.classList.add('hidden');
     }
   });
