@@ -86,19 +86,31 @@ async function affichageGare(){
             let retard = "black"
             if (element.stop_date_time.data_freshness == "base_schedule") {
                 retard = "green-500"
+                container.innerHTML += 
+                `<div class="p-2 md:w-full cursor-pointer">
+                    <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
+                        <div class="flex flex-row flex-center items-center gap-3 ml-2">
+                            <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
+                            <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.arrival_date_time)}</h1>
+                            <p class="leading-relaxed">${element.display_informations.direction}</p>
+                        </div>
+                    </div>
+                </div>`
             } else if (element.stop_date_time.data_freshness == "realtime") {
                 retard = "orange-500"
-            }
-            container.innerHTML += 
-            `<div class="p-2 md:w-full cursor-pointer">
-                <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
-                    <div class="flex flex-row flex-center items-center gap-3 ml-2">
-                        <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
-                        <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.arrival_date_time)}</h1>
-                        <p class="leading-relaxed">${element.display_informations.direction}</p>
+                container.innerHTML += 
+                `<div class="p-2 md:w-full cursor-pointer">
+                    <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
+                        <div class="flex flex-row flex-center items-center gap-3 ml-2">
+                            <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
+                            <h1 class="title-font text-lg font-medium text-gray-900 line-through">${getHour(element.stop_date_time.base_departure_date_time)}</h1>
+                            <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.departure_date_time)}</h1>
+                            <p class="leading-relaxed">${element.display_informations.direction}</p>
+                        </div>
                     </div>
-                </div>
-            </div>`
+                </div>`
+            }
+            
         });
     } catch (error) {
         console.error(error)
