@@ -1,0 +1,11 @@
+{
+  "name": "sncf-api",
+  "version": "1.0.0",
+  "description": "Système de tack train qui permet de voir les prochains trains qui passeront dans une gare",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "leseullunique",
+  "license": "ISC"
+}
