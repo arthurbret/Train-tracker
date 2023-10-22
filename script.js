@@ -54,7 +54,7 @@ async function getUicCodeSncf(url, gare) {
 async function getInfoApi(url, uicCode) {
     try {
         console.log(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/departures?")
-        const data = await getWithHeader(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/departures?")
+        const data = await getWithHeader(url + "/v1/coverage/sncf/stop_areas/stop_area%3ASNCF%3A" + uicCode + "/departures?count=10&")
         return data
     } catch (error) {
         console.error(error)
@@ -81,7 +81,7 @@ async function affichageGare(){
         const dataApi = await getInfoApi(urlApiSncf, UIC)
         console.log(dataApi)
         container.innerHTML = ""
-        dataApi.departures.forEach(element => {
+        dataApi.departures.forEach((element, index) => {
             console.log(element.display_informations.headsign)
             let retard = "black"
             if (element.stop_date_time.data_freshness == "base_schedule") {
@@ -90,6 +90,9 @@ async function affichageGare(){
                 `<div class="p-2 md:w-full cursor-pointer">
                     <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
                         <div class="flex flex-row flex-center items-center gap-3 ml-2">
+                            <div id="typeTransport" class="align-middle bg-red-100 gap-2">
+
+                            </div>
                             <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
                             <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.arrival_date_time)}</h1>
                             <p class="leading-relaxed">${element.display_informations.direction}</p>
@@ -110,7 +113,6 @@ async function affichageGare(){
                     </div>
                 </div>`
             }
-            
         });
     } catch (error) {
         console.error(error)
