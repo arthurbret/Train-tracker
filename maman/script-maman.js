@@ -7,6 +7,15 @@ const headers = {
 }
 let gareDemande;
 
+// Fonction qui calcule le temps de retard en minutes
+function calculRetard(horaireTheorie, horairePratique) {
+    const dateTheorie = new Date(horaireTheorie);
+    const datePratique = new Date(horairePratique);
+    const diffMs = datePratique - dateTheorie;
+    const diffMin = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+    return diffMin;
+}
+
 // Fonction qui transforme la date SNCF en heure
 function getHour(dateHeure) {
     // Extrait l'année, le mois, le jour, l'heure, les minutes et les secondes de la chaîne d'entrée
@@ -96,13 +105,14 @@ async function affichageGare(){
                         </div>
                     </div>
                 </div>`
-            } else if (element.stop_date_time.data_freshness == "realtime") {
+            } else if ((element.stop_date_time.data_freshness == "realtime") && (element.base_departure_date_time)) {
                 retard = "orange-500"
                 container.innerHTML += 
                 `<div class="p-2 md:w-full cursor-pointer">
                     <div class="h-full border-2 border-gray-300 border-opacity-60 rounded-lg overflow-hidden">
                         <div class="flex flex-row flex-center items-center gap-3 ml-2">
                             <div class="colored-dot w-[10px] h-[10px] bg-${retard} rounded-full"></div>
+                            <p>${calculRetard(element.stop_date_time.base_departure_date_time,element.stop_date_time.departure_date_time)}</p>
                             <h1 class="title-font text-lg font-medium text-gray-900 line-through">${getHour(element.stop_date_time.base_departure_date_time)}</h1>
                             <h1 class="title-font text-lg font-medium text-gray-900">${getHour(element.stop_date_time.departure_date_time)}</h1>
                             <p class="leading-relaxed">${element.display_informations.direction}</p>
