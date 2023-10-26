@@ -15,6 +15,7 @@ J'utilise au quotidien les trains TER pour me rendre à l'école et régulièrem
  - [ ] Compte utilisateur avec les gares préférées
  - [ ] Système communautaire d'alerte perturbation
  - [ ] Notification webapp avec les perturbations détectées
+ - [ ] Réclamation de groupe
  
  **Long terme (rentrée septembre 2024)**
  
@@ -31,3 +32,34 @@ Fonctionnalité indispensable pour simplifier grandement la recherche. Au lieu d
 
 ## Amélioration visuelle site web
 N'ayant pas beaucoup d'expérience et d'affinités avec le frontend le site n'est pas très joli, certains bugs visuels sont présents comme avec les suggestions mais aussi l'affichage des retards. Ces bugs seront résolus au compte-goutte car ce n'est pas la priorité du projet.
+
+## Page "train" avec toutes les informations sur le train
+Une page dédiée qui s'affiche quand l'utilisateur clique sur un des trains affichés dans le tableau des prochains départs. Cette page permettra d'accéder au trajet complet du train, les horaires de passage de ce train chaque gare, et toutes les autres informations disponibles sur l'API SNCF.
+
+## Affichage complet retards et suppression avec la cause
+Ajout d'un petit bloc en dessous de chaque départ de train qui indique la raison de la suppression ou du retard.
+
+## Compte utilisateur avec les gares préférées
+Système de connexion avec compte utilisateur sur lequel l'utilisateur pourra enregistrer ses gares préférées pour y avoir accès encore plus rapidement. Nécessite l'ajout d'une interface de connexion qui sera probablement faite avec Firebase pour simplifier l'implémentation.
+
+## Système communautaire d'alerte perturbation
+Élement très novateur et dans l'ère du temps, en étant connecté l'utilisateur pourras signaler des perturbation sur le train dans lequel il se trouve. Si jamais l'API SNCF n'indique pas un retard l'utilisateur pourras le signaler et ce retard sera visible par tous les autres utlisateur. Au delà des retards le but est de pouvoir signaler d'autres éléments qui ne seront jamais donnés par l'API comme par exemple un train bondé, une personne qui a un comportement douteux, un bagage oublié...
+
+## Notification webapp avec les perturbations détectées
+L'objectif de ce point est de pouvoir simplifier encore la vie de l'utilisateur en lui évitant de consulter TrainTracker régulièrement pour vérifier si des perturbations sont présentes sur son train. Au lieu de ça la webapp TrainTracker sera capable d'envoyer une notification à l'utilisateur dès qu'une perturbation sera détectée. 
+❗Cette fonctionnalité sera probablement payante pour supporter les frais de serveur
+
+## Réclamation de groupe
+Proposition qui fera plaisir à beaucoup d'usagers quotidiens des transports SNCF. Le but est de faire des réclamations à la SNCF en groupe. Pendant des périodes de grèves ou de retards intempestifs un bouton apparaitra et permettra à tous les usagers qui le souhaitent de faire partie de la réclamation de groupe puis cette réclamation sera envoyée en masse auprès du service SNCF concerné.
+
+## Application mobile iOS/Android avec widgets
+Cette fonctionnalité est dans la catégorie "long terme" car je ne suis pas encore assez formé pour la proposer. N'hésitez pas à me contacter si vous souhaitez apporter votre aide.
+
+## Application montre connectée watchOS/wearOS avec fonctionnalité logicielle
+Cette fonctionnalité est dans la catégorie "long terme" car je ne suis pas encore assez formé pour la proposer. N'hésitez pas à me contacter si vous souhaitez apporter votre aide.
+
+# Utilisation de TrainTracker
+
+Après toute cette présentation vous vous demandez probablement comment utiliser ce merveilleux service ? C'est très simple, il vous suffit de vous rendre sur ce [site web](https://arthurbret.github.io/Train-tracker/).
+
+N'hésitez pas à me contacter sur cette adresse mail si vous souhaitez participer au projet, donner votre avis ou des conseils, ils sont tous bienvenus : abret.56@gmail.com.
