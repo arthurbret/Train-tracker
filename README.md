@@ -6,7 +6,7 @@ J'utilise au quotidien les trains TER pour me rendre à l'école et régulièrem
 ## Objectifs de ce projet
 **Court terme (quelques semaines) :**
  - [x] Accès au tableau des prochains trains d'une gare
- - [x] Autocompletion barre de recherche
+ - [x] [Autocompletion barre de recherche](./#autocompletion-barre-de-recherche)
  - [ ] Amélioration visuelle site web
  - [ ] Page "train" avec toutes les informations sur le train
  - [ ] Affichage complet retards et suppression avec la cause
